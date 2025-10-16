@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطة المشتريات لعام 2026</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for a clean Arabic font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Tajawal font to the entire application */
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        /* Custom scrollbar for a better look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-8">
+            <div class="flex justify-center items-center gap-4 mb-4">
+                 <!-- Logo -->
+                <img src="https://www.moci.gov.qa/wp-content/themes/2018_mec_v1/assets/images/logo-main.svg" alt="شعار الوزارة" class="h-16">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">خطة المشتريات لعام 2026</h1>
+            </div>
+            <p class="text-md text-gray-600">مرحباً بكم! يمكنكم استعراض خطة المشتريات السنوية والبحث عن الفرص المتاحة.</p>
+        </header>
+
+        <!-- Filters Section -->
+        <div class="bg-white p-4 rounded-lg shadow-md mb-6 sticky top-0 z-10">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Search by Description -->
+                <div class="sm:col-span-2">
+                    <label for="search-input" class="block text-sm font-medium text-gray-700 mb-1">بحث بالبيان</label>
+                    <input type="text" id="search-input" placeholder="مثال: خدمات استشارية..." class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition">
+                </div>
+                <!-- Filter by Department -->
+                <div>
+                    <label for="department-filter" class="block text-sm font-medium text-gray-700 mb-1">الإدارة الطالبة</label>
+                    <select id="department-filter" class="w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition">
+                        <option value="">الكل</option>
+                    </select>
+                </div>
+                <!-- Filter by Sector -->
+                <div>
+                    <label for="sector-filter" class="block text-sm font-medium text-gray-700 mb-1">القطاع</label>
+                    <select id="sector-filter" class="w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition">
+                        <option value="">الكل</option>
+                    </select>
+                </div>
+                <!-- Filter by Type -->
+                <div>
+                    <label for="type-filter" class="block text-sm font-medium text-gray-700 mb-1">النوع</label>
+                    <select id="type-filter" class="w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition">
+                        <option value="">الكل</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+                 <button id="reset-filters" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition shadow-sm">إعادة تعيين</button>
+                 <div id="results-count" class="text-sm font-medium text-gray-600"></div>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">مسلسل</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">بيان الأعمال</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">الإدارة الطالبة</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">القطاع</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">النوع</th>
+                        </tr>
+                    </thead>
+                    <tbody id="procurement-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Rows will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+                 <div id="no-results" class="text-center py-10 text-gray-500 hidden">
+                    <p class="text-lg font-semibold">لا توجد نتائج مطابقة لبحثك</p>
+                    <p>يرجى محاولة تعديل معايير البحث.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="text-center mt-8 text-sm text-gray-500">
+            <p>&copy; 2024 - جميع الحقوق محفوظة.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Raw data from the uploaded file (tab-separated) - Corrected with the new data
+            const rawData = `مسلسل	بيان الأعمال	الإدارة الطالبة	القطاع	النوع
+01	تقديم الدعم المطلوب في مجال الخدمات الاستشارية التشغيلية لمشاريع وزارة التجارة والصناعة تحت الطلب (3 سنوات)	التخطيط والجودة 	مكتب سعادة الوكيل 	مصروفات خدمات الاستشارات 
+02	وضع خطة تفعيل إدارة المخاطر وخطة استمرارية الاعمال	التخطيط والجودة 	مكتب سعادة الوكيل 	مصروفات خدمات الاستشارات 
+03	إنشاء وتنفيذ إطار عمل مكتب إدارة​ الاستراتيجية (SMO ) في وزارة التجارة والصناعة 	التخطيط والجودة 	مكتب سعادة الوكيل 	مصروفات خدمات الاستشارات 
+04	المعمارية المؤسسية 	التخطيط والجودة 	مكتب سعادة الوكيل 	مصروفات خدمات الاستشارات 
+05	 جائزة التميز  الحكومي	التخطيط والجودة 	مكتب سعادة الوكيل 	مصروفات خدمات الاستشارات 
+06	المتسوق السري	التخطيط والجودة 	مكتب سعادة الوكيل 	مصروفات خدمات الاستشارات 
+07	تقييم المخاطر القطاعية للجهات الخاضعة لأشراف الوزارة	 شؤون الشركات	التجارة	مصروفات خدمات الاستشارات 
+08	مؤتمر حوكمة الشركات	 شؤون الشركات	التجارة	مصروفات العلاقات العامة
+09	وضع ضوابط على جميع المناطق الصناعية لعام 2026	التنمية الصناعية	الصناعة	مصروفات خدمات الاستشارات 
+10	انشاء جائزة للمصانع المتميزة  	التنمية الصناعية	الصناعة	مصروفات خدمات الاستشارات 
+11	 تعزيز إقامة شراكات داعمة لتحسين العلاقات التجارية (مجالس الأعمال)	ترويج الاستثمار	الصناعة	مصروفات العلاقات العامة
+12	تقديم خدمات استشارية في مجال تنمية الاعمال بنظام الإعارة عند الطلب	إدارة تنمية الاعمال	الصناعة	مصروفات خدمات الاستشارات 
+13	قاعدة بيانات للمعالجات التجارية	دعم تنافسية المنتج الوطني	الصناعة	مصروفات خدمات الاستشارات 
+14	تنفيذ مخرجات دراسة آليات التسعير لأسعار الخدمات والسلع واعداد مقارنات بهدف تعيين الحد الأقصى لأسعارها  لتحقيق التوازن بين مصالح المستثمر والمستهلك 	التراخيص النوعية ومراقبة الأسواق 	المستهلك 	مصروفات خدمات الاستشارات 
+15	احتياجات الوزارة من التدريب	الموارد البشرية 	الخدمات المشتركة 	مصروفات التدريب
+16	تحديث مشروع محركات عبء العمل  - تقييم إمكانيات موظفي الوزارة 	الموارد البشرية 	الخدمات المشتركة 	مصروفات خدمات الاستشارات 
+17	كفاءة الإنفاق ( الكفاءة المالية ) 	الشؤون المالية والإدارية	الخدمات المشتركة 	مصروفات خدمات الاستشارات 
+18	مشروع مراقبة الصرف من الموازنة 	الشؤون المالية والإدارية	الخدمات المشتركة 	مصروفات خدمات الاستشارات 
+19	التعاقد مع فندق تحت الطلب لتأجير القاعات واحتياجات الوزارة من كوفي بريك وورد وشوكولاتة وتمورواي متطلبات أخرى	العلاقات العامة 	الخدمات المشتركة 	مصروفات العلاقات العامة
+20	فعالية أسبوع المنتج الوطني	العلاقات العامة 	الخدمات المشتركة 	مصروفات العلاقات العامة
+21	Privilege Access Management (PAM)- تطوير نظام إدارة صلاحيات المستخدمين على الشبكات	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+22	 Application  Security برنامج تأمين التطبيقات	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+23	حلول للوقاية من فقدان البيانات - Data Loss Prevention Solution	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+24	Data Rights Management (DRM) إدارة حقوق البيانات	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+25	DNS Security أمان نظام أسماء النطاقات	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+26	Single Window Barracuda and Palo Alto Renewal for 1 Yr	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+27	Crypto Management Solution (HSM ) Solutionحلول لوحدة أمان الأجهزة	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+28	VxRail Hardware Refresh and VMWare Backup Infrastructure License & Support Renewal	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+29	Fortinet consolidated co-termed renewal 	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+30	Oracle Licenses تجديد رخص أوراكل لمدة 3 سنوات	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+31	Ansible for Red Hat patching and hybrid cloud automation	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+32	Azure Managed Services Support	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+33	Redhat License and Support Renewal	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+34	IDPA Backup Hardware Refresh and Capacity Expansion	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+35	تجديد دعم مايكروسوفت بريميير - Microsoft Premier AMC renewal	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+36	خدمات تشغيلية ودعم ل Azure Dynamics 365 and DataBricks لمدة 5 سنوات	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+37	Supply of IP Phones Under Call-Off Agreement	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+38	أتمتة أعمال التدقيق الداخلي	نظم المعلومات	الخدمات المشتركة 	مصروفات إدارة نظم المعلومات
+39	 المواد الغذائية - الشوار	التموين والمخزون الاستراتيجي	المستهلك 	المواد الغذائية
+40	  المواد الغذائية - الأرز	التموين والمخزون الاستراتيجي	المستهلك 	المواد الغذائية
+41	 المواد الغذائية - زيوت	التموين والمخزون الاستراتيجي	المستهلك 	المواد الغذائية
+42	  المواد الغذائية - الدقيق	التموين والمخزون الاستراتيجي	المستهلك 	المواد الغذائية
+43	 المواد الغذائية - الشعير	التموين والمخزون الاستراتيجي	المستهلك 	المواد الغذائية
+44	 المواد الغذائية - الحليب	التموين والمخزون الاستراتيجي	المستهلك 	المواد الغذائية
+45	 المواد الغذائية - اللحوم	التموين والمخزون الاستراتيجي	المستهلك 	المواد الغذائية
+46	  المواد الغذائية - السكر	التموين والمخزون الاستراتيجي	المستهلك 	المواد الغذائية`;
+
+            // Function to parse tab-separated data into a JavaScript array of objects
+            const dataToArray = (dataString) => {
+                const rows = dataString.trim().replace(/\r/g, '').split('\n');
+                const headers = rows.shift().split('\t').map(h => h.trim());
+                return rows.map(row => {
+                    const values = row.split('\t');
+                    return headers.reduce((obj, header, index) => {
+                        obj[header] = values[index] ? values[index].trim() : '';
+                        return obj;
+                    }, {});
+                });
+            };
+
+            const procurementData = dataToArray(rawData);
+            const tableBody = document.getElementById('procurement-table-body');
+            const searchInput = document.getElementById('search-input');
+            const sectorFilter = document.getElementById('sector-filter');
+            const typeFilter = document.getElementById('type-filter');
+            const departmentFilter = document.getElementById('department-filter');
+            const resultsCount = document.getElementById('results-count');
+            const noResultsDiv = document.getElementById('no-results');
+            const resetBtn = document.getElementById('reset-filters');
+
+            // Function to render the table rows
+            const renderTable = (data) => {
+                tableBody.innerHTML = '';
+                if (data.length === 0) {
+                    noResultsDiv.classList.remove('hidden');
+                } else {
+                     noResultsDiv.classList.add('hidden');
+                }
+
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50 transition';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item['مسلسل']}</td>
+                        <td class="px-6 py-4 whitespace-normal text-sm text-gray-700">${item['بيان الأعمال']}</td>
+                        <td class="px-6 py-4 whitespace-normal text-sm text-gray-600">${item['الإدارة الطالبة']}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${item['القطاع']}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                ${item['النوع']}
+                            </span>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                // The line below was removed to hide the record count.
+                // resultsCount.textContent = `عرض ${data.length} من ${procurementData.length}項目`;
+            };
+
+            // Function to populate filter dropdowns with unique values
+            const populateFilters = () => {
+                const sectors = [...new Set(procurementData.map(item => item['القطاع']))];
+                const types = [...new Set(procurementData.map(item => item['النوع']))];
+                const departments = [...new Set(procurementData.map(item => item['الإدارة الطالبة']))];
+
+                sectors.forEach(sector => {
+                    if (sector) {
+                        const option = document.createElement('option');
+                        option.value = sector;
+                        option.textContent = sector;
+                        sectorFilter.appendChild(option);
+                    }
+                });
+
+                types.forEach(type => {
+                    if (type) {
+                        const option = document.createElement('option');
+                        option.value = type;
+                        option.textContent = type;
+                        typeFilter.appendChild(option);
+                    }
+                });
+
+                departments.forEach(department => {
+                    if (department) {
+                        const option = document.createElement('option');
+                        option.value = department;
+                        option.textContent = department;
+                        departmentFilter.appendChild(option);
+                    }
+                });
+            };
+            
+            // Function to filter data based on user input
+            const filterData = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedSector = sectorFilter.value;
+                const selectedType = typeFilter.value;
+                const selectedDepartment = departmentFilter.value;
+
+                const filteredData = procurementData.filter(item => {
+                    const matchesSearch = item['بيان الأعمال'].toLowerCase().includes(searchTerm) ||
+                                          item['الإدارة الطالبة'].toLowerCase().includes(searchTerm);
+                    const matchesSector = !selectedSector || item['القطاع'] === selectedSector;
+                    const matchesType = !selectedType || item['النوع'] === selectedType;
+                    const matchesDepartment = !selectedDepartment || item['الإدارة الطالبة'] === selectedDepartment;
+                    
+                    return matchesSearch && matchesSector && matchesType && matchesDepartment;
+                });
+
+                renderTable(filteredData);
+            };
+            
+            // Function to reset all filters
+            const resetFilters = () => {
+                searchInput.value = '';
+                sectorFilter.value = '';
+                typeFilter.value = '';
+                departmentFilter.value = '';
+                filterData();
+            };
+
+            // Add event listeners to filter controls
+            searchInput.addEventListener('input', filterData);
+            sectorFilter.addEventListener('change', filterData);
+            typeFilter.addEventListener('change', filterData);
+            departmentFilter.addEventListener('change', filterData);
+            resetBtn.addEventListener('click', resetFilters);
+
+            // Initial setup
+            populateFilters();
+            renderTable(procurementData);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
